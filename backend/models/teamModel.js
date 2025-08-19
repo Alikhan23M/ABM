@@ -1,0 +1,14 @@
+const mongoose = require('mongoose');
+
+const teamMemberSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    imageUrl:{type:String, required:false},
+    designation: { type: String, required: true },
+    teamType: { type: String, required: true},
+    expertise: { type: String, required: true },
+    description:{type:String, required:false},
+});
+
+const TeamMember = mongoose.model('TeamMember', teamMemberSchema);
+
+module.exports = TeamMember;
