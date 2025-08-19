@@ -39,7 +39,7 @@ connectDB();
 app.use(express.json());
 
 const corsOptions = {
-    origin: ['*', 'http://localhost:5173','http://localhost:4173'], // Allow all origins (*) and a specific frontend URL
+    origin: ['*', 'http://localhost:5173','http://localhost:4173','https://abm-demo.vercel.app'], // Allow all origins (*) and a specific frontend URL
     credentials: true, // Allow cookies and authentication headers
 };
 
