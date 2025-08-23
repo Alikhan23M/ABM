@@ -7,6 +7,7 @@ exports.getAllCareers = async (req, res) => {
         const filter = {};
         if (isInternship !== undefined) {
             filter.isInternship = isInternship === 'true';
+            filter.isArchived = false;
         }
 
         const careers = await Career.find(filter).sort({ createdAt: -1 });
@@ -23,7 +24,7 @@ exports.getAllCareers = async (req, res) => {
 exports.getCareerById = async (req, res) => {
     try {
         const career = await Career.findById(req.params.id);
-        if (!career) {
+        if (!career || career.isArchived) {
             return res.status(404).json({ message: 'Career entry not found' });
         }
         res.status(200).json(career);
@@ -75,7 +76,7 @@ exports.updateCareerById = async (req, res) => {
 // Delete a career entry by ID
 exports.deleteCareerById = async (req, res) => {
     try {
-        const career = await Career.findByIdAndDelete(req.params.id);
+        const career = await Career.findOneAndUpdate({_id:req.params.id},{isArchived:true});
         if (!career) {
             return res.status(404).json({ message: 'Career entry not found' });
         }

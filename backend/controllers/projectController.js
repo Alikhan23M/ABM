@@ -3,7 +3,7 @@ const Project = require('../models/projectModel');
 // Get all projects
 exports.getAllProjects = async (req, res) => {
     try {
-        const projects = await Project.find();
+        const projects = await Project.find({isArchived:false});
         res.json(projects);
     } catch (err) {
         res.status(500).send(err.message);
@@ -14,7 +14,7 @@ exports.getAllProjects = async (req, res) => {
 exports.getProjectById = async (req, res) => {
     try {
         const project = await Project.findById(req.params.id);
-        if (!project) return res.status(404).send('Project not found');
+        if (!project || project.isArchived) return res.status(404).send('Project not found');
         res.json(project);
     } catch (err) {
         res.status(500).send(err.message);
@@ -52,7 +52,7 @@ exports.updateProjectById = async (req, res) => {
 // Delete a project by ID
 exports.deleteProjectById = async (req, res) => {
     try {
-        const project = await Project.findByIdAndDelete(req.params.id);
+        const project = await Project.findOneAndUpdate({_id:req.params.id},{isArchived:true});
         if (!project) return res.status(404).send('Project not found');
         res.json(project);
     } catch (err) {

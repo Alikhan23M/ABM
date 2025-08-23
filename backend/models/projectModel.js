@@ -10,6 +10,10 @@ const projectSchema = new mongoose.Schema({
         type: String, 
         required: true,
         enum: ['Pending', 'Ongoing', 'Completed'] 
+    },
+    isArchived:{
+        type: Boolean,
+        default: false
     }
 });
 

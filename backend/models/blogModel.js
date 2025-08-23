@@ -12,6 +12,10 @@ const BlogSchema = new mongoose.Schema({
     thumbnailUrl: {
         type: String,
         required: true
+    },
+    isArchived:{
+        type: Boolean,
+        default: false
     }
 });
 

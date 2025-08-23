@@ -28,7 +28,7 @@ exports.createEvent = async (req, res) => {
 // Get all events
 exports.getAllEvents = async (req, res) => {
     try {
-        const events = await Event.find().populate('category'); // populate category info
+        const events = await Event.find({isArchived:false}).populate('category'); // populate category info
         res.status(200).json(events);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching events', error });
@@ -39,7 +39,7 @@ exports.getAllEvents = async (req, res) => {
 exports.getEventById = async (req, res) => {
     try {
         const event = await Event.findById(req.params.id).populate('category');
-        if (!event) {
+        if (!event || event.isArchived) {
             return res.status(404).json({ message: 'Event not found' });
         }
         res.status(200).json(event);
@@ -72,7 +72,7 @@ exports.updateEventById = async (req, res) => {
 // Delete an event by ID
 exports.deleteEventById = async (req, res) => {
     try {
-        const deletedEvent = await Event.findByIdAndDelete(req.params.id);
+        const deletedEvent = await Event.findOneAndUpdate({_id:req.params.id},{isArchived:true});
         if (!deletedEvent) {
             return res.status(404).json({ message: 'Event not found' });
         }

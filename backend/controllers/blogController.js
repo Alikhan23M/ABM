@@ -21,7 +21,7 @@ exports.createBlog = async (req, res) => {
 // Get all blogs
 exports.getAllBlogs = async (req, res) => {
     try {
-        const blogs = await Blog.find();
+        const blogs = await Blog.find({isArchived:false});
         res.status(200).json(blogs);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching blogs', error });
@@ -32,7 +32,7 @@ exports.getAllBlogs = async (req, res) => {
 exports.getBlogById = async (req, res) => {
     try {
         const blog = await Blog.findById(req.params.id);
-        if (!blog) {
+        if (!blog || blog.isArchived) {
             return res.status(404).json({ message: 'Blog not found' });
         }
         res.status(200).json(blog);
@@ -65,12 +65,13 @@ exports.updateBlogById = async (req, res) => {
 // Delete a blog by ID
 exports.deleteBlogById = async (req, res) => {
     try {
-        const deletedBlog = await Blog.findByIdAndDelete(req.params.id);
+        const deletedBlog = await Blog.findOneAndUpdate({_id:req.params.id},{isArchived:true});
         if (!deletedBlog) {
             return res.status(404).json({ message: 'Blog not found' });
         }
         res.status(200).json({ message: 'Blog deleted successfully' });
     } catch (error) {
+        console.error(error);
         res.status(500).json({ message: 'Error deleting blog', error });
     }
 };

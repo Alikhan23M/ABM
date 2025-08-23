@@ -21,7 +21,7 @@ exports.createTender = async (req, res) => {
 // Get all tenders
 exports.getAllTenders = async (req, res) => {
     try {
-        const tenders = await Tender.find();
+        const tenders = await Tender.find({isArchived:false});
         res.status(200).json(tenders);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching tenders', error });
@@ -32,7 +32,7 @@ exports.getAllTenders = async (req, res) => {
 exports.getTenderById = async (req, res) => {
     try {
         const tender = await Tender.findById(req.params.id);
-        if (!tender) {
+        if (!tender || tender.isArchived) {
             return res.status(404).json({ message: 'Tender not found' });
         }
         res.status(200).json(tender);
@@ -65,7 +65,7 @@ exports.updateTenderById = async (req, res) => {
 // Delete a tender by ID
 exports.deleteTenderById = async (req, res) => {
     try {
-        const deletedTender = await Tender.findByIdAndDelete(req.params.id);
+        const deletedTender = await Tender.findOneAndUpdate({_id:req.params.id},{isArchived:true});
         if (!deletedTender) {
             return res.status(404).json({ message: 'Tender not found' });
         }

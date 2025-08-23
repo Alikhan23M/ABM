@@ -24,7 +24,7 @@ exports.createCategory = async (req, res) => {
 // Get all categories
 exports.getAllCategories = async (req, res) => {
     try {
-        const categories = await Category.find().sort({ createdAt: -1 });
+        const categories = await Category.find({isArchived:false}).sort({ createdAt: -1 });
         res.status(200).json(categories);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching categories', error });
@@ -35,7 +35,7 @@ exports.getAllCategories = async (req, res) => {
 exports.getCategoryById = async (req, res) => {
     try {
         const category = await Category.findById(req.params.id);
-        if (!category) {
+        if (!category || category.isArchived) {
             return res.status(404).json({ message: 'Category not found' });
         }
         res.status(200).json(category);
@@ -68,7 +68,7 @@ exports.updateCategoryById = async (req, res) => {
 // Delete category
 exports.deleteCategoryById = async (req, res) => {
     try {
-        const deletedCategory = await Category.findByIdAndDelete(req.params.id);
+        const deletedCategory = await Category.findOneAndUpdate({_id:req.params.id},{isArchived:true});
         if (!deletedCategory) {
             return res.status(404).json({ message: 'Category not found' });
         }

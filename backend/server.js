@@ -28,6 +28,7 @@ const ColorsRoutes = require('./routes/colorRoutes');
 const sectionInfoRoutes = require('./routes/sectionInfoRoutes');
 const navbarRoutes = require('./routes/navbarRoutes')
 const pagesRoutes = require('./routes/pageRoutes');
+const HomeSectionsRoutes = require('./routes/homeSectionRoutes');
 const cors = require('cors')
 const app = express();
 const port = process.env.PORT;
@@ -39,7 +40,7 @@ connectDB();
 app.use(express.json());
 
 const corsOptions = {
-    origin: ['*', 'http://localhost:5173','http://localhost:4173','https://abm-demo.vercel.app'], // Allow all origins (*) and a specific frontend URL
+    origin: ['*', 'http://localhost:5173','http://localhost:4173'], // Allow all origins (*) and a specific frontend URL
     credentials: true, // Allow cookies and authentication headers
 };
 
@@ -74,6 +75,7 @@ app.use('/api/colors', ColorsRoutes);
 app.use('/api/section-info', sectionInfoRoutes);
 app.use('/api/navbar', navbarRoutes);
 app.use('/api/pages',pagesRoutes);
+app.use('/api/homeSections', HomeSectionsRoutes);
 
 app.get('/', async (req, res) => {
     try {

@@ -15,7 +15,8 @@ buttonLink:{
 },
 position:{
     type:String,
-}
+},
+
 }, { timestamps: true });
 
 const SectionInfo = mongoose.model('SectionInfo', SectionInfoSchema);

@@ -27,6 +27,10 @@ const EventSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Category', // reference to the Category model
         required: true
+    },
+    isArchived:{
+        type: Boolean,
+        default: false
     }
 }, { timestamps: true });
 

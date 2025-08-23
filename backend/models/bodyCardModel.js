@@ -3,10 +3,14 @@
 const mongoose = require('mongoose');
 
 const bodyCardSchema = new mongoose.Schema({
-   "title":{type:String,require:true},
-   "description":{type:String},
-   "image":{type:String},
-   "url":{type:String,required:true}
+   title:{type:String,require:true},
+   description:{type:String},
+   image:{type:String},
+   url:{type:String,required:true},
+   isArchived:{
+        type: Boolean,
+        default: false
+    }
 }, {
     timestamps: true
 });

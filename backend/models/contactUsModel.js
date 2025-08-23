@@ -5,6 +5,10 @@ const contactUsSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  subAddress:{
+    type:String,
+    required:false
+  },
   email: {
     type: String,
     required: true,

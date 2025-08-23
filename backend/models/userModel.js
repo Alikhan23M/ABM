@@ -16,7 +16,11 @@ const UserSchema = new mongoose.Schema({
     },
     resetPasswordToken: String,
     resetPasswordExpires: Date,
-    role:{type:String, required:true,enum: ['admin', 'editor', 'moderator', 'user']}
+    role:{type:String, required:true,enum: ['admin', 'editor', 'moderator', 'user']},
+    isArchived:{
+        type: Boolean,
+        default: false
+    }
 });
 
 const User = mongoose.model('User', UserSchema);

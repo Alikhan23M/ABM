@@ -20,6 +20,10 @@ const NewsSchema = new mongoose.Schema({
     imageUrl: {
         type: String, // Field to store the image URL
         required: false
+    },
+    isArchived:{
+        type: Boolean,
+        default: false
     }
 });
 

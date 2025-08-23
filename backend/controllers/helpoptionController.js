@@ -3,7 +3,7 @@ const HelpOption = require('../models/helpOptionModel');
 // GET all help options
 exports.getHelpOptions = async (req, res) => {
   try {
-    const helpOptions = await HelpOption.find();
+    const helpOptions = await HelpOption.find({isArchived:false});
     res.status(200).json(helpOptions);
   } catch (error) {
     res.status(500).json({ message: "Error fetching help options", error });
@@ -45,7 +45,7 @@ exports.updateHelpOption = async (req, res) => {
 // DELETE a help option
 exports.deleteHelpOption = async (req, res) => {
   try {
-    const deletedOption = await HelpOption.findByIdAndDelete(req.params.id);
+    const deletedOption = await HelpOption.findOneAndUpdate({_id:req.params.id},{isArchived:true});
     if (!deletedOption) {
       return res.status(404).json({ message: "Help option not found" });
     }

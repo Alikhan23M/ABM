@@ -4,7 +4,7 @@ const upload = require('../middelware/upload');
 // Get all news articles
 exports.getAllNews = async (req, res) => {
     try {
-        const news = await News.find();
+        const news = await News.find({isArchived:false});
         res.status(200).json(news);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching news articles', error });
@@ -15,7 +15,7 @@ exports.getAllNews = async (req, res) => {
 exports.getNewsById = async (req, res) => {
     try {
         const news = await News.findById(req.params.id);
-        if (!news) {
+        if (!news || news.isArchived) {
             return res.status(404).json({ message: 'News article not found' });
         }
         res.status(200).json(news);
@@ -67,7 +67,7 @@ exports.updateNewsById = async (req, res) => {
 // Delete a news article by ID
 exports.deleteNewsById = async (req, res) => {
     try {
-        const news = await News.findByIdAndDelete(req.params.id);
+        const news = await News.findOneAndUpdate({_id:req.params.id},{isArchived:true});
         if (!news) {
             return res.status(404).json({ message: 'News article not found' });
         }

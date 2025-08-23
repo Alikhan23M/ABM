@@ -5,7 +5,7 @@ const PartnerOrg=require('./../models/partnerModel');
 
 exports.getPartners= async (req, res) => {
     try {
-        const orgs = await PartnerOrg.find();
+        const orgs = await PartnerOrg.find({isArchived:false});
         res.json(orgs);
     } catch (err) {
         res.status(500).send(err.message);
@@ -16,7 +16,7 @@ exports.getPartners= async (req, res) => {
 exports.getPartnersById= async (req, res) => {
     try {
         const org = await PartnerOrg.findById(req.params.id);
-        if (!org) return res.status(404).send('Organization not found');
+        if (!org || org.isArchived) return res.status(404).send('Organization not found');
         res.json(org);
     } catch (err) {
         res.status(500).send(err.message);
@@ -26,8 +26,8 @@ exports.getPartnersById= async (req, res) => {
 // Add a new partner organization
 exports.addPartner = async (req, res) => {
     try {
-        const { name, imageUrl, description } = req.body;
-        const newOrg = new PartnerOrg({ name, imageUrl, description });
+        const { name, imageUrl, description ,siteUrl} = req.body;
+        const newOrg = new PartnerOrg({ name, imageUrl, description, siteUrl });
         await newOrg.save();
         res.status(201).json(newOrg);
     } catch (err) {
@@ -38,10 +38,10 @@ exports.addPartner = async (req, res) => {
 // Update a partner organization by ID
 exports.updatePartner =  async (req, res) => {
     try {
-        const { name, imageUrl, description } = req.body;
+        const { name, imageUrl, description, siteUrl } = req.body;
         const org = await PartnerOrg.findByIdAndUpdate(
             req.params.id,
-            { name, imageUrl, description },
+            { name, imageUrl, description, siteUrl },
             { new: true, runValidators: true }
         );
         if (!org) return res.status(404).send('Organization not found');
@@ -54,7 +54,7 @@ exports.updatePartner =  async (req, res) => {
 // Delete a partner organization by ID
 exports.deletePartner = async (req, res) => {
     try {
-        const org = await PartnerOrg.findByIdAndDelete(req.params.id);
+        const org = await PartnerOrg.findOneAndUpdate({_id:req.params.id},{isArchived:true});
         if (!org) return res.status(404).send('Organization not found');
         res.json(org);
     } catch (err) {

@@ -3,7 +3,7 @@ const Video = require('../models/videoModel');
 // Get all videos
 exports.getAllVideos = async (req, res) => {
     try {
-        const videos = await Video.find();
+        const videos = await Video.find({isArchived:false}).populate('category');;
         res.json(videos);
     } catch (err) {
         res.status(500).send(err.message);
@@ -14,7 +14,7 @@ exports.getAllVideos = async (req, res) => {
 exports.getVideoById = async (req, res) => {
     try {
         const video = await Video.findById(req.params.id);
-        if (!video) return res.status(404).send('Video not found');
+        if (!video || video.isArchived) return res.status(404).send('Video not found');
         res.json(video);
     } catch (err) {
         res.status(500).send(err.message);
@@ -24,7 +24,7 @@ exports.getVideoById = async (req, res) => {
 // Add a new video
 exports.addNewVideo = async (req, res) => {
     try {
-        const { title, type, videoUrl, embedCode } = req.body;
+        const { title, type, videoUrl, embedCode,category } = req.body;
 
         // Validate type
         // if (!['upload', 'embed'].includes(type)) {
@@ -39,7 +39,7 @@ exports.addNewVideo = async (req, res) => {
             return res.status(400).json({ message: 'embedCode is required for embed type' });
         }
 
-        const newVideo = new Video({ title, type, videoUrl, embedCode });
+        const newVideo = new Video({ title, type, videoUrl, embedCode,category });
         await newVideo.save();
 
         res.status(201).json(newVideo);
@@ -51,16 +51,16 @@ exports.addNewVideo = async (req, res) => {
 // Update a video by ID
 exports.updateVideoById = async (req, res) => {
     try {
-        const { title, type, videoUrl, embedCode } = req.body;
+        const { title, type, videoUrl, embedCode,category } = req.body;
 
         // Validate type
-        if (type && !['upload', 'embed'].includes(type)) {
+        if (type && !['custom', 'embed'].includes(type)) {
             return res.status(400).json({ message: 'Invalid video type' });
         }
 
         // Validate required fields based on type
-        if (type === 'upload' && !videoUrl) {
-            return res.status(400).json({ message: 'videoUrl is required for upload type' });
+        if (type === 'custom' && !videoUrl) {
+            return res.status(400).json({ message: 'videoUrl is required for custom type' });
         }
         if (type === 'embed' && !embedCode) {
             return res.status(400).json({ message: 'embedCode is required for embed type' });
@@ -68,7 +68,7 @@ exports.updateVideoById = async (req, res) => {
 
         const video = await Video.findByIdAndUpdate(
             req.params.id,
-            { title, type, videoUrl, embedCode },
+            { title, type, videoUrl, embedCode,category },
             { new: true, runValidators: true }
         );
 
@@ -82,7 +82,7 @@ exports.updateVideoById = async (req, res) => {
 // Delete a video by ID
 exports.deleteVideoById = async (req, res) => {
     try {
-        const video = await Video.findByIdAndDelete(req.params.id);
+        const video = await Video.findOneAndUpdate({_id:req.params.id},{isArchived:true});
         if (!video) return res.status(404).send('Video not found');
         res.json(video);
     } catch (err) {

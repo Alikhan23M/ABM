@@ -7,6 +7,10 @@ const teamMemberSchema = new mongoose.Schema({
     teamType: { type: String, required: true},
     expertise: { type: String, required: true },
     description:{type:String, required:false},
+    isArchived:{
+        type: Boolean,
+        default: false
+    },
 });
 
 const TeamMember = mongoose.model('TeamMember', teamMemberSchema);

@@ -15,7 +15,7 @@ exports.getMembers = async (req, res) => {
 exports.getMembersByType = async (req, res) => {
     const { teamType } = req.params;
     try {
-        const members = await TeamMember.find({ teamType }); // Changed findOne to find
+        const members = await TeamMember.find({ teamType,isArchived:false},); // Changed findOne to find
         res.json(members);
     } catch (err) {
         res.status(500).send({ message:err.message});
@@ -26,7 +26,7 @@ exports.getMembersByType = async (req, res) => {
 exports.getMemberById = async (req, res) => {
     try {
         const member = await TeamMember.findById(req.params.id);
-        if (!member) return res.status(404).send('Member not found');
+        if (!member || member.isArchived) return res.status(404).send('Member not found');
         res.json(member);
     } catch (err) {
         res.status(500).send({ message:err.message});
@@ -64,7 +64,7 @@ exports.updateMember = async (req, res) => {
 // Delete a team member by ID
 exports.deleteMember = async (req, res) => {
     try {
-        const member = await TeamMember.findByIdAndDelete(req.params.id);
+        const member = await TeamMember.findOneAndUpdate({_id:req.params.id},{isArchived:true});
         if (!member) return res.status(404).send('Member not found');
         res.json(member);
     } catch (err) {

@@ -2,7 +2,7 @@ const bodyCard = require('../models/bodyCardModel')
 // getAll bodyCards
 exports.getBodyCard = async(req,res)=>{
 try {
-    const bodyCardData = await bodyCard.find();
+    const bodyCardData = await bodyCard.find({isArchived:false});
     res.status(200).json(bodyCardData);
 } catch (error) {
     res.status(400).json("An error occured while fetching bodyCards data",error)
@@ -49,7 +49,7 @@ try {
 exports.deleteBodyCard = async (req, res) => {
   try {
     console.log('Deleting body card with ID:', req.params.id);
-    const deletedBodyCard = await bodyCard.findByIdAndDelete(req.params.id);
+    const deletedBodyCard = await bodyCard.findByIdAndUpdate({_id:req.params.id},{isArchived:true});
     if (!deletedBodyCard) {
       return res.status(404).json({ message: "BodyCard not found" });
     }

@@ -63,7 +63,7 @@ export const createStat = async (req, res) => {
 // Get all stats (with computed values)
 export const getAllStats = async (req, res) => {
   try {
-    const stats = await Stats.find();
+    const stats = await Stats.find({isArchived:false});
 
     const updatedStats = await Promise.all(
       stats.map(async (stat) => {
@@ -150,7 +150,7 @@ export const updateStat = async (req, res) => {
 export const deleteStat = async (req, res) => {
     try {
         const { id } = req.params;
-        const deleted = await Stats.findByIdAndDelete(id);
+        const deleted = await Stats.findOneAndUpdate({_id:id},{isArchived:true});
         if (!deleted) {
             return res.status(404).json({ message: "Stat not found" });
         }

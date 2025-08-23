@@ -2,13 +2,22 @@ const mongoose = require('mongoose');
 
 const VideoSchema = new mongoose.Schema({
   title: { type: String, required: true },
-  type: { 
-    type: String, 
-    enum: ['custom', 'embed'], 
-    required: true 
+  type: {
+    type: String,
+    enum: ['custom', 'embed'],
+    required: true
   },
   videoUrl: { type: String }, // For custom videos
   embedCode: { type: String }, // For embed videos
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category', // reference to the Category model
+
+  },
+  isArchived: {
+    type: Boolean,
+    default: false
+  }
 }, { timestamps: true });
 
 // Optional: Validation so at least one of videoUrl or embedCode is required

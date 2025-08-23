@@ -12,6 +12,10 @@ const TenderSchema = new mongoose.Schema({
     imageUrl: {
         type: String,
         required: true
+    },
+    isArchived:{
+        type: Boolean,
+        default: false
     }
 });
 

@@ -21,7 +21,7 @@ exports.createSliderImage = async (req, res) => {
 // Get all slider images
 exports.getAllSliderImages = async (req, res) => {
     try {
-        const sliderImages = await SliderImage.find();
+        const sliderImages = await SliderImage.find({isArchived:false});
         res.status(200).json(sliderImages);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching slider images', error });
@@ -32,7 +32,7 @@ exports.getAllSliderImages = async (req, res) => {
 exports.getSliderImageById = async (req, res) => {
     try {
         const sliderImage = await SliderImage.findById(req.params.id);
-        if (!sliderImage) {
+        if (!sliderImage || sliderImage.isArchived) {
             return res.status(404).json({ message: 'Slider image not found' });
         }
         res.status(200).json(sliderImage);
@@ -65,7 +65,7 @@ exports.updateSliderImageById = async (req, res) => {
 // Delete a slider image by ID
 exports.deleteSliderImageById = async (req, res) => {
     try {
-        const deletedSliderImage = await SliderImage.findByIdAndDelete(req.params.id);
+        const deletedSliderImage = await SliderImage.findOneAndUpdate({_id:req.params.id},{isArchived:true});
         if (!deletedSliderImage) {
             return res.status(404).json({ message: 'Slider image not found' });
         }

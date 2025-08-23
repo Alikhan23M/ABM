@@ -12,7 +12,7 @@ exports.getContactUs = async (req, res) => {
 
 // Update the Contact Us record (only accessible to admins)
 exports.updateContactUs = async (req, res) => {
-  const { address, email, phone } = req.body;
+  const { address, subAddress, email, phone } = req.body;
 
   try {
     const contactUs = await ContactUs.findOne();
@@ -20,6 +20,7 @@ exports.updateContactUs = async (req, res) => {
       // Create a new record if it doesn't exist (optional based on your requirements)
       const newContactUs = new ContactUs({
         address,
+        subAddress,
         email,
         phone,
       });
@@ -31,6 +32,7 @@ exports.updateContactUs = async (req, res) => {
     contactUs.address = address;
     contactUs.email = email;
     contactUs.phone = phone;
+    contactUs.subAddress = subAddress; // Update subAddress if provided
     await contactUs.save();
     res.status(200).json(contactUs);
   } catch (error) {

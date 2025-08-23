@@ -27,6 +27,11 @@ const statsSchema = new mongoose.Schema({
     type: String,
     required: true // example: "/projects" or "/events"
   }
+  ,
+  isArchived:{
+        type: Boolean,
+        default: false
+    }
 }, { timestamps: true });
 
 export default mongoose.model("Stats", statsSchema);

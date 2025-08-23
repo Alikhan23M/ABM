@@ -18,7 +18,7 @@ exports.createPage = async (req, res) => {
 // Get all pages
 exports.getAllPages = async (req, res) => {
     try {
-        const pages = await Page.find().select('url mainTitle status');
+        const pages = await Page.find({isArchived:false}).select('url mainTitle status');
         res.status(200).json(pages);
     } catch (error) {
         res.status(500).json({ message: 'Failed to retrieve pages.', error });
@@ -29,7 +29,7 @@ exports.getAllPages = async (req, res) => {
 exports.getSinglePage = async (req, res) => {
     try {
         const page = await Page.findOne({ url: req.params.url });
-        if (!page) {
+        if (!page || page.isArchived) {
             return res.status(404).json({ message: 'Page not found.' });
         }
         res.status(200).json({ page });
@@ -54,7 +54,7 @@ exports.updatePage = async (req, res) => {
 // Delete a page
 exports.deletePage = async (req, res) => {
     try {
-        const deletedPage = await Page.findOneAndDelete({ url: req.params.url });
+        const deletedPage = await Page.findOneAndUpdate({ url: req.params.url }, { isArchived: true });
         if (!deletedPage) {
             return res.status(404).json({ message: 'Page not found.' });
         }
