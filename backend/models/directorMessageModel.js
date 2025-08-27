@@ -10,7 +10,11 @@ const DirectorMessageSchema = new mongoose.Schema({
         type: String,
         required: true,
         default:"No Message Available"
-    }
+    },
+    imgUrl:{
+        type:String,
+        required:false,
+    },
 });
 
 const DirectorMessage = mongoose.model('DirectorMessage', DirectorMessageSchema);
