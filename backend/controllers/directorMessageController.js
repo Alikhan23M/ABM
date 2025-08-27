@@ -12,7 +12,7 @@ exports.getMessage = async (req, res) => {
 
 // Update the Contact Us record (only accessible to admins)
 exports.updateMessage = async (req, res) => {
-  const {title, description } = req.body;
+  const {title, description, imgUrl } = req.body;
 
   try {
     const message = await Message.findOne();
@@ -20,7 +20,8 @@ exports.updateMessage = async (req, res) => {
       // Create a new record if it doesn't exist (optional based on your requirements)
       const newMessage = new Message({
         title,
-        description
+        description,
+        imgUrl,
       });
       await newMessage.save();
       return res.status(201).json(newMessage);
@@ -29,6 +30,7 @@ exports.updateMessage = async (req, res) => {
     // Update existing contact information
     message.title = title;
     message.description = description;
+    message.imgUrl = imgUrl;
     await message.save();
     res.status(200).json(message);
   } catch (error) {
