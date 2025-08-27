@@ -83,8 +83,8 @@ exports.newsPagination = async (req, res) => {
     const perPage = parseInt(req.query.perPage) || 2; // Default to 2 items per page if not provided
   
     try {
-      const totalCount = await News.countDocuments();
-      const news = await News.find()
+      const totalCount = await News.countDocuments({ isArchived: false });
+      const news = await News.find({ isArchived: false })
         .sort({ publishedAt: -1 }) // Sort by publishedAt descending
         .skip((page - 1) * perPage) // Skip records based on current page
         .limit(perPage); // Limit results per page
@@ -98,4 +98,5 @@ exports.newsPagination = async (req, res) => {
       res.status(500).json({ message: 'Error fetching news articles', error });
     }
   };
+
   
