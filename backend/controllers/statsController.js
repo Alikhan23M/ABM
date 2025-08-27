@@ -22,7 +22,7 @@ const getCollectionCount = async (collectionName) => {
   try {
     const count = await mongoose.connection.db
       .collection(collectionName) // use native collection
-      .countDocuments();
+      .countDocuments({isArchived:false});
     return count;
   } catch (err) {
     console.error(`Error counting documents in ${collectionName}:`, err);
@@ -73,7 +73,7 @@ export const getAllStats = async (req, res) => {
           // Get actual number of documents in the collection
           value = await mongoose.connection.db
             .collection(stat.collectionName)
-            .countDocuments();
+            .countDocuments({isArchived:false});
         } else {
           // Use targetValue for custom stats
           value = stat.targetValue || 0;
@@ -159,3 +159,4 @@ export const deleteStat = async (req, res) => {
         res.status(500).json({ message: "Error deleting stat", error });
     }
 };
+
