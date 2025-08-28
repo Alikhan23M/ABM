@@ -5,7 +5,7 @@ const TeamMember = require('./../models/teamModel');
 // Get all team members
 exports.getMembers = async (req, res) => {
     try {
-        const members = await TeamMember.find();
+        const members = await TeamMember.find({isArchived:false});
         res.json(members);
     } catch (err) {
         res.status(500).send({ message:err.message});
@@ -74,4 +74,5 @@ exports.deleteMember = async (req, res) => {
 
 
 // ******************************PARTNER ORG************************************************
+
 
