@@ -4,8 +4,14 @@ const Page = require('../models/pagesModel');
 // Create a new page
 exports.createPage = async (req, res) => {
     try {
+        // Ensure the URL doesn't start with '/'
+        if (req.body.url) {
+            req.body.url = req.body.url.replace(/^\/+/, ''); // removes all leading slashes
+        }
+
         const newPage = new Page(req.body);
         await newPage.save();
+        
         res.status(201).json({ message: 'Page created successfully', page: newPage });
     } catch (error) {
         if (error.code === 11000) {
@@ -14,6 +20,8 @@ exports.createPage = async (req, res) => {
         res.status(500).json({ message: 'Failed to create page.', error });
     }
 };
+
+
 
 // Get all pages
 exports.getAllPages = async (req, res) => {
@@ -63,4 +71,5 @@ exports.deletePage = async (req, res) => {
         res.status(500).json({ message: 'Failed to delete page.', error });
     }
 };
+
 
