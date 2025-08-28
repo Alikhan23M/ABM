@@ -9,7 +9,7 @@ const cardSchema = new mongoose.Schema({
     buttonText: String,
     buttonLink: String,
     order: { type: Number, default: 0 }
-}, { _id: false });
+}, { _id: true });
 
 // Schema for styling and color options
 const colorsSchema = new mongoose.Schema({
@@ -92,4 +92,5 @@ pageSchema.pre('save', function(next) {
 });
 
 const Page = mongoose.model('Page', pageSchema);
+
 module.exports = Page;
