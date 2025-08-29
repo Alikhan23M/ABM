@@ -4,21 +4,21 @@ const Footer = require('../models/footerModel');
 const getFooter = async (req, res) => {
     try {
         const footer = await Footer.findOne({ isActive: true });
-        
+
         if (!footer) {
             // Return default footer if none exists
             return res.status(200).json({
                 legalSection: {
-                    title: "Legal Standings & Certifications",
+                    title: { title: "Legal Standings & Certifications", fontSize: 0.9 },
                     certifications: [
-                        { name: "Pakistan Center For Philanthropy", icon: "FaCheckCircle", color: "text-yellow-400" },
-                        { name: "Pakistan Center For Philanthropy", icon: "FaCheckCircle", color: "text-yellow-400" }
+                        { name: "Pakistan Center For Philanthropy", icon: "FaCheckCircle", color: "text-yellow-400", fontSize: 1.2 },
                     ],
-                    programs: "Our Programs are in line with UNSDGs",
-                    organization: "Abm Pakistan",
-                    taxNumber: "National Tax Number: 7547210-8"
+                    programs: { programs: "Our Programs are in line with UNSDGs", fontSize: 0.9 },
+                    organization: { organization: "Abm Pakistan", fontSize: 0.9 },
+                    taxNumber: { taxNumber: "National Tax Number: 7547210-8", fontSize: 0.9 }
                 },
                 aboutSection: {
+
                     title: "About",
                     links: [
                         { text: "Board", url: "#" },
@@ -26,7 +26,8 @@ const getFooter = async (req, res) => {
                         { text: "Board", url: "#" },
                         { text: "Board", url: "#" },
                         { text: "Board", url: "#" }
-                    ]
+                    ],
+                    fontSize: 0.9
                 },
                 quickLinksSection: {
                     title: "Quick Links",
@@ -38,26 +39,30 @@ const getFooter = async (req, res) => {
                         { text: "Careers", url: "#", icon: "FaBriefcase" },
                         { text: "Contact Us", url: "#", icon: "FaUsers" },
                         { text: "Staff Portal", url: "#", icon: "FaUsers" }
-                    ]
+                    ],
+                    fontSize: 0.9
                 },
                 contactSection: {
                     title: "Contact (ABM)",
                     email: "contact.abm@domain.com",
                     phone: "+92 300 1234567",
-                    address: "123 ABM Street, Karachi, Pakistan"
+                    address: "123 ABM Street, Karachi, Pakistan",
+                    fontSize: 0.9
                 },
                 bottomSection: {
                     registration: "ABM Pakistan Pakistan is registered under the 1860 Societies Registration Act.",
-                    copyright: "Copyright © 2025 Abm Pakistan. All rights reserved."
+                    copyright: "Copyright © 2025 Abm Pakistan. All rights reserved.",
+                    fontSize: 0.9
+
                 },
                 styling: {
-                    backgroundColor: "bg-teal-900",
-                    textColor: "text-white",
-                    accentColor: "text-yellow-400"
+                    backgroundColor: "teal",
+                    textColor: "white",
+                    accentColor: "#FFA700"
                 }
             });
         }
-        
+
         res.status(200).json(footer);
     } catch (error) {
         console.error('Error fetching footer:', error);
@@ -80,16 +85,16 @@ const getAllFooters = async (req, res) => {
 const createFooter = async (req, res) => {
     try {
         const footerData = req.body;
-        
+
         // Deactivate all existing footers
         await Footer.updateMany({}, { isActive: false });
-        
+
         // Create new footer as active
         const newFooter = new Footer({
             ...footerData,
             isActive: true
         });
-        
+
         const savedFooter = await newFooter.save();
         res.status(201).json(savedFooter);
     } catch (error) {
@@ -103,17 +108,17 @@ const updateFooter = async (req, res) => {
     try {
         const { id } = req.params;
         const updateData = req.body;
-        
+
         const updatedFooter = await Footer.findByIdAndUpdate(
             id,
             updateData,
             { new: true, runValidators: true }
         );
-        
+
         if (!updatedFooter) {
             return res.status(404).json({ message: 'Footer not found' });
         }
-        
+
         res.status(200).json(updatedFooter);
     } catch (error) {
         console.error('Error updating footer:', error);
@@ -125,13 +130,13 @@ const updateFooter = async (req, res) => {
 const deleteFooter = async (req, res) => {
     try {
         const { id } = req.params;
-        
+
         const deletedFooter = await Footer.findByIdAndDelete(id);
-        
+
         if (!deletedFooter) {
             return res.status(404).json({ message: 'Footer not found' });
         }
-        
+
         // If deleted footer was active, activate the most recent one
         if (deletedFooter.isActive) {
             const latestFooter = await Footer.findOne().sort({ createdAt: -1 });
@@ -140,7 +145,7 @@ const deleteFooter = async (req, res) => {
                 await latestFooter.save();
             }
         }
-        
+
         res.status(200).json({ message: 'Footer deleted successfully' });
     } catch (error) {
         console.error('Error deleting footer:', error);
@@ -152,21 +157,21 @@ const deleteFooter = async (req, res) => {
 const setActiveFooter = async (req, res) => {
     try {
         const { id } = req.params;
-        
+
         // Deactivate all footers
         await Footer.updateMany({}, { isActive: false });
-        
+
         // Activate the selected footer
         const activeFooter = await Footer.findByIdAndUpdate(
             id,
             { isActive: true },
             { new: true }
         );
-        
+
         if (!activeFooter) {
             return res.status(404).json({ message: 'Footer not found' });
         }
-        
+
         res.status(200).json(activeFooter);
     } catch (error) {
         console.error('Error setting active footer:', error);
