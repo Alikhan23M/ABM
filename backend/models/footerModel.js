@@ -4,9 +4,13 @@ const footerSchema = new mongoose.Schema({
   // Legal & Certifications Section
   legalSection: {
     title: {
-      type: String,
-      default: "Legal Standings & Certifications"
+      title: {
+        type: String,
+        default: "Legal Standings & Certifications"
+      },
+      fontSize: { type: Number }
     },
+
     certifications: [{
       name: {
         type: String,
@@ -18,20 +22,36 @@ const footerSchema = new mongoose.Schema({
       },
       color: {
         type: String,
-        default: "text-yellow-400"
+        default: "#FFA700"
+      },
+      fontSize: {
+        type: Number,
+        default: 1
       }
     }],
+
     programs: {
-      type: String,
-      default: "Our Programs are in line with UNSDGs"
+      programs: {
+        type: String,
+        default: "Our Programs are in line with UNSDGs"
+      },
+      fontSize: { type: Number }
     },
+
     organization: {
-      type: String,
-      default: "Abm Pakistan"
+      organization: {
+        type: String,
+        default: "Abm Pakistan"
+      },
+      fontSize: { type: Number }
     },
+
     taxNumber: {
-      type: String,
-      default: "National Tax Number: 7547210-8"
+      taxNumber: {
+        type: String,
+        default: "National Tax Number: 7547210-8"
+      },
+      fontSize: { type: Number }
     }
   },
 
@@ -50,7 +70,8 @@ const footerSchema = new mongoose.Schema({
         type: String,
         default: "#"
       }
-    }]
+    }],
+    fontSize:{type:Number}
   },
 
   // Quick Links Section
@@ -72,7 +93,8 @@ const footerSchema = new mongoose.Schema({
         type: String,
         default: "FaRegBuilding"
       }
-    }]
+    }],
+    fontSize:{type:Number}
   },
 
   // Contact Section
@@ -92,7 +114,8 @@ const footerSchema = new mongoose.Schema({
     address: {
       type: String,
       default: "123 ABM Street, Karachi, Pakistan"
-    }
+    },
+    fontSize:{type:Number}
   },
 
   // Bottom Section
@@ -104,22 +127,23 @@ const footerSchema = new mongoose.Schema({
     copyright: {
       type: String,
       default: "Copyright © 2025 Abm Pakistan. All rights reserved."
-    }
+    },
+    fontSize:{type:Number}
   },
 
   // Footer Styling
   styling: {
     backgroundColor: {
       type: String,
-      default: "bg-teal-900"
+      default: "teal"
     },
     textColor: {
       type: String,
-      default: "text-white"
+      default: "white"
     },
     accentColor: {
       type: String,
-      default: "text-yellow-400"
+      default: "#FFA700"
     }
   },
 
