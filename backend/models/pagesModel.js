@@ -56,8 +56,13 @@ const pageSchema = new mongoose.Schema({
         enum: ['center', 'left'], 
         default: 'center'
     },
-
+    isJustified: {
+        type: Boolean,
+        default: false
+    },
+    
     mainImage: String,
+    
     imagePlacement: { 
         type: String, 
         enum: ['top', 'left', 'right'], 
@@ -94,3 +99,4 @@ pageSchema.pre('save', function(next) {
 const Page = mongoose.model('Page', pageSchema);
 
 module.exports = Page;
+
