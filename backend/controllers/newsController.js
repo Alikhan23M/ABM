@@ -31,6 +31,7 @@ exports.addNewNews = async (req, res) => {
             title: req.body.title,
             content: req.body.content,
             author: req.body.author,
+            publishedAt: req.body.publishedAt,
         };
         if (req.body.imageUrl) {
             newsData.imageUrl = req.body.imageUrl; // Cloudinary URL
@@ -50,6 +51,7 @@ exports.updateNewsById = async (req, res) => {
             title: req.body.title,
             content: req.body.content,
             author: req.body.author,
+            publishedAt: req.body.publishedAt
         };
         if (req.body.imageUrl) {
             newsData.imageUrl = req.body.imageUrl; // Cloudinary URL
@@ -98,5 +100,4 @@ exports.newsPagination = async (req, res) => {
       res.status(500).json({ message: 'Error fetching news articles', error });
     }
   };
-
   
